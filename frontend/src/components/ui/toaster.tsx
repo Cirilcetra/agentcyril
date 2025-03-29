@@ -1,48 +1,35 @@
 "use client"
 
-import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Toast, ToastContainer } from '@/components/ui/toast';
-import { useToast as useToastStore } from '@/components/ui/use-toast';
-
-interface Toast {
-  id: string;
-  title: string;
-  description?: string;
-  type?: 'default' | 'success' | 'error' | 'warning' | 'info';
-  duration?: number;
-  visible: boolean;
-}
+import { useToast } from "@/hooks/use-toast"
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast"
 
 export function Toaster() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const { toasts } = useToast()
 
-  useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
-
-  const handleClose = (id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  };
-
-  if (!isMounted) return null;
-
-  return createPortal(
-    <ToastContainer>
-      {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          id={toast.id}
-          title={toast.title}
-          description={toast.description}
-          type={toast.type}
-          visible={toast.visible}
-          onClose={handleClose}
-        />
-      ))}
-    </ToastContainer>,
-    document.body
-  );
+  return (
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, ...props }) {
+        return (
+          <Toast key={id} {...props}>
+            <div className="grid gap-1">
+              {title && <ToastTitle>{title}</ToastTitle>}
+              {description && (
+                <ToastDescription>{description}</ToastDescription>
+              )}
+            </div>
+            {action}
+            <ToastClose />
+          </Toast>
+        )
+      })}
+      <ToastViewport />
+    </ToastProvider>
+  )
 }

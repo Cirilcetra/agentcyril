@@ -17,7 +17,6 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { redirect } from 'next/navigation';
 import { ProjectManagement } from '@/components/admin/project-management';
-import { DocumentManagement } from '@/components/admin/document-management';
 
 export default function AdminPage() {
   const [formData, setFormData] = useState<ProfileData>({
@@ -238,9 +237,6 @@ export default function AdminPage() {
               </TabsTrigger>
               <TabsTrigger value="projects">
                 Projects
-              </TabsTrigger>
-              <TabsTrigger value="documents">
-                Documents
               </TabsTrigger>
             </TabsList>
           </div>
@@ -500,10 +496,6 @@ export default function AdminPage() {
 
           <TabsContent value="projects">
             <ProjectManagement userId={user.id} />
-          </TabsContent>
-          
-          <TabsContent value="documents">
-            <DocumentManagement userId={user.id} />
           </TabsContent>
         </Tabs>
       </main>
